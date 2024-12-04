@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class Server {
-    private static final int PORT = 3000;
+    private static final int PORT = 2678;
     private static final Map<UUID, ClientHandler> clients = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
