@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'edu.sc.seis.launch4j' version '2.5.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2' // Add Shadow plugin for fat JAR
+}
+
+group = 'com.xargana.hsm'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.9'
+}
+
+shadowJar {
+    archiveBaseName = 'hsm'
+    archiveVersion = '1.0-SNAPSHOT'
+    mergeServiceFiles() // Optional, if you have service files
+}
+
+application {
+    mainClass = 'com.xargana.hsm.Client'  // This defines the main class for the application plugin
+}
+
+jar {
+    from configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest {
+        attributes(
+            'Main-Class': 'com.xargana.hsm.Client'  // Make sure this matches the main class
+        )
+    }
+}
+
+task buildClientExecutable(type: Jar) {
+    archiveClassifier = 'client'
+    from sourceSets.main.output
+    manifest {
+        attributes(
+            'Main-Class': 'com.xargana.hsm.Client'
+        )
+    }
+}
+
+launch4j {
+    // Configure Launch4j properly
+    mainClassName = 'com.xargana.hsm.Client'  // This is the correct property for Launch4j
+    jar = "build/libs/hsm-1.0-SNAPSHOT.jar"  // Path to the generated JAR
+    outfile = "build/libs/hsm-1.0-SNAPSHOT.exe"  // Output EXE file path
+    //icon = 'path/to/icon.ico'  // Optional: add an icon if you like
+    jreMinVersion = '1.8.0'  // Set a minimum Java version
+}
