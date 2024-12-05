@@ -56,6 +56,9 @@ public class Client {
                     handleCommand(out, message);
                 } else {
                     sendJson(out, "message", message);
+                    // Clear the console line and print the new message
+                    clearConsoleLine();
+                    System.out.println("[" + username + "]: " + message);
                 }
             }
         } catch (IOException e) {
@@ -113,5 +116,11 @@ public class Client {
     private static void updateConsoleTitle(String title) {
         System.out.print("\033]0;" + title + "\007");
         System.out.flush();
+    }
+
+    private static void clearConsoleLine() {
+        System.out.print("\r"); // Move cursor to the start of the line
+        System.out.print("                                        "); // Print spaces to clear the line
+        System.out.print("\r"); // Move cursor back to the start again
     }
 }
